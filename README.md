@@ -74,7 +74,7 @@ Tải mã nguồn U-Boot:
 
 "u-boot.img – Second stage bootloader"
 
-## 4. Chuẩn bị thẻ nhớ SD
+## 3. Chuẩn bị thẻ nhớ SD
 - Kiểm tra tên thiết bị thẻ nhớ:
 
 "lsblk"
@@ -137,7 +137,7 @@ w → ghi và thoát
 
 - Kết quả mong đợi: U-Boot dừng ở thông báo không tìm thấy kernel (TIMEOUT), xác nhận U-Boot hoạt động đúng.
 
-4. Build Linux Kernel cho BeagleBone Black
+## 4. Build Linux Kernel cho BeagleBone Black
 - Chuẩn bị thư mục Kernel:
 
 "mkdir -p ~/bbb/kernel"
@@ -221,7 +221,7 @@ Kernel panic - not syncing: VFS: Unable to mount root fs
 
 Lỗi này là đúng, do phân vùng ROOTFS còn trống.
 
-8. Boot Kernel thủ công bằng U-Boot
+## 8. Boot Kernel thủ công bằng U-Boot
 
 - Mở UART:
 
