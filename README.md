@@ -39,7 +39,7 @@ Phần mềm:
 
 "sudo apt install build-essential git bc bison flex libssl-dev libncurses5-dev libncursesw5-dev device-tree-compiler u-boot-tools gparted"
 ## 2. Build U-Boot cho BeagleBone Black
-Chuẩn bị thư mục làm việc:
+- Chuẩn bị thư mục làm việc:
 
 "mkdir -p ~/bbb/u-boot"
 
@@ -52,7 +52,7 @@ Tải mã nguồn U-Boot:
 
 "git checkout v2024.04"
 
-Thiết lập Toolchain:
+- Thiết lập Toolchain:
 
 "export ARCH=arm"
 
@@ -60,7 +60,7 @@ Thiết lập Toolchain:
 
 - Lưu ý: Bắt buộc có dấu - ở cuối CROSS_COMPILE.
 
-Cấu hình và biên dịch U-Boot:
+- Cấu hình và biên dịch U-Boot:
 
 "make distclean"
 
@@ -68,23 +68,23 @@ Cấu hình và biên dịch U-Boot:
 
 "make -j$(nproc)"
 
-Sau khi build thành công, trong thư mục U-Boot phải xuất hiện:
+- Sau khi build thành công, trong thư mục U-Boot phải xuất hiện:
 
 "MLO – First stage bootloader"
 
 "u-boot.img – Second stage bootloader"
 
 ## 4. Chuẩn bị thẻ nhớ SD
-Kiểm tra tên thiết bị thẻ nhớ:
+- Kiểm tra tên thiết bị thẻ nhớ:
 
 "lsblk"
 
 
-Tạo bảng phân vùng (MBR / MS-DOS)
+- Tạo bảng phân vùng (MBR / MS-DOS)
 
-sudo fdisk /dev/sdb
+"sudo fdisk /dev/sdb"
 
-Thao tác trong fdisk:
+- Thao tác trong fdisk:
 
 
 o → tạo bảng phân vùng DOS
@@ -98,16 +98,19 @@ t → chọn phân vùng 1 → nhập c (W95 FAT32 LBA)
 a → chọn phân vùng 1 để bật boot flag
 
 w → ghi và thoát
-Kiểm tra lại:
+
+- Kiểm tra lại:
 
 "lsblk -f"
 
-Phân vùng /dev/sdb1 phải có cờ boot (*).
+- Phân vùng /dev/sdb1 phải có cờ boot (*).
 
-Định dạng phân vùng:
+- Định dạng phân vùng:
+
 "sudo mkfs.vfat -F 32 /dev/sdb1"
 
 "sudo mkfs.ext4 /dev/sdb2"
+
 - Copy file U-Boot vào thẻ nhớ
 
 - Rút thẻ nhớ và cắm lại để hệ thống tự mount, sau đó copy:
@@ -120,9 +123,10 @@ Phân vùng /dev/sdb1 phải có cờ boot (*).
 
 "sync"
 
-Thứ tự copy rất quan trọng: MLO trước, u-boot.img sau.
+- Thứ tự copy rất quan trọng: MLO trước, u-boot.img sau.
 
-Test U-Boot:
+- Test U-Boot:
+
 - Rút thẻ nhớ an toàn
 
 - Cắm vào BeagleBone Black
