@@ -223,16 +223,16 @@ Lỗi này là đúng, do phân vùng ROOTFS còn trống.
 
 8. Boot Kernel thủ công bằng U-Boot
 
-Mở UART:
+- Mở UART:
 
 "sudo minicom -D /dev/ttyUSB0 -b 115200"
 
-Nhấn Enter liên tục khi thấy:
+- Nhấn Enter liên tục khi thấy:
 
 
-Hit any key to stop autoboot:
+- Hit any key to stop autoboot:
 
-Kiểm tra thẻ SD
+- Kiểm tra thẻ SD
 
 => mmc list
 
@@ -240,7 +240,7 @@ Kiểm tra thẻ SD
 
 => ls mmc 0:1
 
-Phải thấy:
+- Phải thấy:
 
 
 MLO
@@ -259,16 +259,16 @@ extlinux/
 
 => load mmc 0:1 0x88000000 am335x-boneblack.dtb
 
-Thiết lập bootargs
+- Thiết lập bootargs
 
 => setenv bootargs console=ttyO0,115200n8 root=/dev/mmcblk0p2 rw rootwait
 
-Boot Kernel
+- Boot Kernel
 
 => bootz 0x82000000 - 0x88000000
 
-Kết quả mong đợi:
+- Kết quả mong đợi:
 
 "Starting kernel ..."
 
-Kernel tiếp tục boot và dừng ở panic do chưa có rootfs.
+- Kernel tiếp tục boot và dừng ở panic do chưa có rootfs.
