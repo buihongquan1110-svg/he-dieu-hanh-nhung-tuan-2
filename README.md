@@ -34,58 +34,57 @@ Phần mềm:
 - Các công cụ build cần thiết
 
 - Cài đặt các gói hỗ trợ:
-
-"sudo apt update"
-
-"sudo apt install build-essential git bc bison flex libssl-dev libncurses5-dev libncursesw5-dev device-tree-compiler u-boot-tools gparted"
+```bash
+sudo apt update
+sudo apt install build-essential git bc bison flex libssl-dev libncurses5-dev libncursesw5-dev device-tree-compiler u-boot-tools gparted
+```
 ## 2. Build U-Boot cho BeagleBone Black
 - Chuẩn bị thư mục làm việc:
+```bash
+mkdir -p ~/bbb/u-boot
+cd ~/bbb/u-boot
+```
 
-"mkdir -p ~/bbb/u-boot"
-
-"cd ~/bbb/u-boot"
-Tải mã nguồn U-Boot:
-
-"git clone https://source.denx.de/u-boot/u-boot.git"
-
-"cd u-boot"
-
-"git checkout v2024.04"
-
+- Tải mã nguồn U-Boot:
+```bash
+git clone https://source.denx.de/u-boot/u-boot.git
+cd u-boot
+git checkout v2024.04
+```
 - Thiết lập Toolchain:
-
-"export ARCH=arm"
-
-"export CROSS_COMPILE=arm-linux-gnueabihf-"
+```bash
+export ARCH=arm
+export CROSS_COMPILE=arm-linux-gnueabihf-
+```
 
 - Lưu ý: Bắt buộc có dấu - ở cuối CROSS_COMPILE.
 
 - Cấu hình và biên dịch U-Boot:
-
-"make distclean"
-
-"make am335x_evm_defconfig"
-
-"make -j$(nproc)"
-
+```bash
+make distclean
+make am335x_evm_defconfig
+make -j$(nproc)
+```
 - Sau khi build thành công, trong thư mục U-Boot phải xuất hiện:
+```bash
+MLO – First stage bootloader
+u-boot.img – Second stage bootloader
+```
+<img width="1927" height="2560" alt="image" src="https://github.com/user-attachments/assets/252d9fb8-6e8d-4ddf-aab7-2c69bfea100f" />
 
-"MLO – First stage bootloader"
-
-"u-boot.img – Second stage bootloader"
 
 ## 3. Chuẩn bị thẻ nhớ SD
 - Kiểm tra tên thiết bị thẻ nhớ:
-
-"lsblk"
-
+```bash
+lsblk
+```
 
 - Tạo bảng phân vùng (MBR / MS-DOS)
-
-"sudo fdisk /dev/sdb"
-
+```bash
+sudo fdisk /dev/sdb
+```
 - Thao tác trong fdisk:
-
+```bash
 
 o → tạo bảng phân vùng DOS
 
@@ -98,30 +97,28 @@ t → chọn phân vùng 1 → nhập c (W95 FAT32 LBA)
 a → chọn phân vùng 1 để bật boot flag
 
 w → ghi và thoát
-
+```
 - Kiểm tra lại:
-
-"lsblk -f"
-
+```bash
+lsblk -f
+```
 - Phân vùng /dev/sdb1 phải có cờ boot (*).
 
 - Định dạng phân vùng:
+```bash
+sudo mkfs.vfat -F 32 /dev/sdb1
 
-"sudo mkfs.vfat -F 32 /dev/sdb1"
-
-"sudo mkfs.ext4 /dev/sdb2"
-
+sudo mkfs.ext4 /dev/sdb2
+```
 - Copy file U-Boot vào thẻ nhớ
 
 - Rút thẻ nhớ và cắm lại để hệ thống tự mount, sau đó copy:
-
-"cp MLO /media/$USER/BOOT/"
-
-"sync"
-
-"cp u-boot.img /media/$USER/BOOT/"
-
-"sync"
+```bash
+cp MLO /media/$USER/BOOT/
+sync
+cp u-boot.img /media/$USER/BOOT/
+sync
+```
 
 - Thứ tự copy rất quan trọng: MLO trước, u-boot.img sau.
 
@@ -139,59 +136,53 @@ w → ghi và thoát
 
 ## 4. Build Linux Kernel cho BeagleBone Black
 - Chuẩn bị thư mục Kernel:
-
-"mkdir -p ~/bbb/kernel"
-
-"cd ~/bbb/kernel"
-
+```bash
+mkdir -p ~/bbb/kernel
+cd ~/bbb/kernel
+```
 - Tải Linux Kernel (Stable):
-
-"git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"
-
-"cd linux"
-
-"git checkout v6.6"
-
+```bash
+git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+cd linux
+git checkout v6.6
+```
 - Thiết lập môi trường build:
-
-"export ARCH=arm"
-
-"export CROSS_COMPILE=arm-linux-gnueabihf-"
-
+```bash
+export ARCH=arm
+export CROSS_COMPILE=arm-linux-gnueabihf-
+```
 - Cấu hình Kernel cho BBB:
-
-"make distclean"
-
-"make multi_v7_defconfig"
-
+```bash
+make distclean
+make multi_v7_defconfig
+```
 - Biên dịch Kernel:
-"make -j$(nproc) zImage"
-
-"make -j$(nproc) dtbs"
-
+```bash
+make -j$(nproc) zImage
+make -j$(nproc) dtbs
+```
 - File tạo ra:
-
-"arch/arm/boot/zImage"
-
-"arch/arm/boot/dts/am335x-boneblack.dtb"
-
+```bash
+arch/arm/boot/zImage
+arch/arm/boot/dts/am335x-boneblack.dtb
+```
 ## 5. Copy Kernel & Device Tree vào thẻ nhớ
-"cp arch/arm/boot/zImage /media/$USER/BOOT/"
-
-"cp arch/arm/boot/dts/am335x-boneblack.dtb /media/$USER/BOOT/"
-
-"sync"
-
+```bash
+cp arch/arm/boot/zImage /media/$USER/BOOT/
+cp arch/arm/boot/dts/am335x-boneblack.dtb /media/$USER/BOOT/
+sync
+```
 ## 6. Boot Kernel bằng extlinux.conf
 - Tạo cấu trúc thư mục:
-
-"mkdir -p /media/$USER/BOOT/extlinux"
-- Tạo file extlinux.conf
-
-"nano /media/$USER/BOOT/extlinux/extlinux.conf"
-
+```bash
+mkdir -p /media/$USER/BOOT/extlinux
+```
+- Tạo file extlinux.conf:
+```bash
+nano /media/$USER/BOOT/extlinux/extlinux.conf
+```
 Nội dung:
-
+```bash
 TIMEOUT 1
 
 DEFAULT Rimuru_Linux
@@ -203,6 +194,7 @@ LABEL Rimuru_Linux
     FDT ../am335x-boneblack.dtb
     
     APPEND console=ttyO0,115200n8 root=/dev/mmcblk0p2 rw rootwait
+```
 ## 7. Test boot Kernel
 - Rút thẻ nhớ an toàn
 
@@ -211,24 +203,24 @@ LABEL Rimuru_Linux
 - Giữ nút S2 và cấp nguồn
 
 - Kết quả mong đợi:
-
-"U-Boot tìm thấy extlinux.conf"
-
-"Kernel bắt đầu boot"
+```bash
+U-Boot tìm thấy extlinux.conf
+Kernel bắt đầu boot
+```
 - Dừng ở lỗi:
 
-Kernel panic - not syncing: VFS: Unable to mount root fs
+- Kernel panic - not syncing: VFS: Unable to mount root fs
 
-Lỗi này là đúng, do phân vùng ROOTFS còn trống.
+- Lỗi này là đúng, do phân vùng ROOTFS còn trống.
 
 ## 8. Boot Kernel thủ công bằng U-Boot
 
 - Mở UART:
-
-"sudo minicom -D /dev/ttyUSB0 -b 115200"
-
+```bash
+sudo minicom -D /dev/ttyUSB0 -b 115200
+```
 - Nhấn Enter liên tục khi thấy:
-
+```bash
 
 - Hit any key to stop autoboot:
 
@@ -239,9 +231,9 @@ Lỗi này là đúng, do phân vùng ROOTFS còn trống.
 => mmc dev 0
 
 => ls mmc 0:1
+```
 
 - Phải thấy:
-
 
 MLO
 
