@@ -234,7 +234,7 @@ sudo minicom -D /dev/ttyUSB0 -b 115200
 ```
 
 - Phải thấy:
-
+```bash
 MLO
 
 u-boot.img
@@ -244,23 +244,25 @@ zImage
 am335x-boneblack.dtb
 
 extlinux/
-
-- Load Kernel và Device Tree
+```
+- Load Kernel và Device Tree:
+```bash
 
 => load mmc 0:1 0x82000000 zImage
 
 => load mmc 0:1 0x88000000 am335x-boneblack.dtb
-
-- Thiết lập bootargs
+```
+- Thiết lập bootargs:
+```bash
 
 => setenv bootargs console=ttyO0,115200n8 root=/dev/mmcblk0p2 rw rootwait
-
-- Boot Kernel
-
+```
+- Boot Kernel:
+```bash
 => bootz 0x82000000 - 0x88000000
-
+```
 - Kết quả mong đợi:
-
+```bash
 "Starting kernel ..."
-
+```
 - Kernel tiếp tục boot và dừng ở panic do chưa có rootfs.
